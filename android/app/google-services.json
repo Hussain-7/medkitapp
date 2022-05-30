@@ -1,0 +1,98 @@
+{
+  "project_info": {
+    "project_number": "825575090121",
+    "project_id": "medk-4d6c9",
+    "storage_bucket": "medk-4d6c9.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:825575090121:android:c75e32f7f1a2547dcbaa18",
+        "android_client_info": {
+          "package_name": "com.example.medkitapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "825575090121-ipkl54ocbsums89af6oielbqkusn4rva.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.medkitapp",
+            "certificate_hash": "21e524e5d3d75ee303facd4a547265417cc5c05a"
+          }
+        },
+        {
+          "client_id": "825575090121-k4i89vqsq92r6rrpj6430arei7ivq2bl.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD2zT2YTSRuHEDuO7JuyseKH2YFQsnl6tI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "825575090121-k4i89vqsq92r6rrpj6430arei7ivq2bl.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "825575090121-7uv9lbracbs78289u5i417rdkg9iom9i.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.medkit"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:825575090121:android:777a6a02e8099018cbaa18",
+        "android_client_info": {
+          "package_name": "com.project.medkit"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "825575090121-np8gra5l28r9k7s6kcf8ml61h043qt61.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.project.medkit",
+            "certificate_hash": "21e524e5d3d75ee303facd4a547265417cc5c05a"
+          }
+        },
+        {
+          "client_id": "825575090121-k4i89vqsq92r6rrpj6430arei7ivq2bl.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD2zT2YTSRuHEDuO7JuyseKH2YFQsnl6tI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "825575090121-k4i89vqsq92r6rrpj6430arei7ivq2bl.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "825575090121-7uv9lbracbs78289u5i417rdkg9iom9i.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.medkit"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
