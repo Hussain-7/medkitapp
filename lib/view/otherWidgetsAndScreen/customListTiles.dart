@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:medkitapp/state/Doctor.dart';
+import 'package:medkitapp/view/otherWidgetsAndScreen/medDetails.dart';
 import 'package:provider/provider.dart';
 import 'package:toast/toast.dart';
 
@@ -25,6 +26,8 @@ class _CustomTileState extends State<CustomTile> {
 
   @override
   Widget build(BuildContext context) {
+    print("delete:");
+    print(widget.delBtn);
     double height = MediaQuery.of(context).size.height;
 
     return GestureDetector(
@@ -60,7 +63,11 @@ class _CustomTileState extends State<CustomTile> {
               onPressed: () {
                 widget.delBtn
                     ? _deleteDisease(context)
-                    : _deleteDisease(context);
+                    : new MaterialPageRoute(
+                        builder: (context) => MedDetails(
+                              doctorName: 'Hussain',
+                            ));
+                ;
               },
               shape: CircleBorder(),
               child: widget.delBtn

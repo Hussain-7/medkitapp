@@ -503,6 +503,7 @@ class _DoctorProfileState extends State<DoctorProfile> {
                 style: TextStyle(color: Colors.blue),
               ),
               onPressed: () {
+                print("here");
                 Navigator.of(context).pop();
               },
             ),
@@ -513,11 +514,16 @@ class _DoctorProfileState extends State<DoctorProfile> {
                 style: TextStyle(color: Colors.red),
               ),
               onPressed: () async {
-                final provider =
-                    Provider.of<GoogleSignInProvider>(context, listen: false);
-                await provider.logout();
-                int count = 0;
-                Navigator.of(context).popUntil((_) => count++ >= 3);
+                try {
+                  final provider =
+                      Provider.of<GoogleSignInProvider>(context, listen: false);
+                  await provider.logout();
+                  // int count = 0;
+                  // Navigator.of(context).popUntil((_) => count++ >= 3);
+                  Navigator.pushNamed(context, '/DoctorLogin');
+                } catch (e) {
+                  print("error logging out:" + e);
+                }
               },
             ),
           ],

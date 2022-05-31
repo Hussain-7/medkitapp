@@ -2,8 +2,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:medkitapp/model/disease.dart';
+import 'package:medkitapp/state/Diseases.dart';
 import 'package:medkitapp/state/Doctor.dart';
 import 'package:provider/provider.dart';
+import 'package:uuid/uuid.dart';
 
 class NewDisease extends StatefulWidget {
   @override
@@ -21,29 +24,36 @@ class _NewDiseaseState extends State<NewDisease> {
   }
 
   void _submitData(Function addDisease) async {
-    final enteredTitle = _titleController.text;
-    final user = FirebaseAuth.instance.currentUser;
-    final diseases = Provider.of<Doctor>(context, listen: false).diseases;
-    if (enteredTitle.isEmpty) {
-      return;
+    try {
+      final enteredTitle = _titleController.text;
+      final user = FirebaseAuth.instance.currentUser;
+      // final diseases = Provider.of<Diseases>(context, listen: false).diseases;
+      if (enteredTitle.isEmpty) {
+        return;
+      }
+      var uuid = Uuid().v4();
+      Disease disease = Disease(uid: uuid.toString(), name: enteredTitle);
+      print(disease);
+
+      await FirebaseFirestore.instance
+          .collection("diseases")
+          .doc(uuid.toString())
+          .set(disease.toMap());
+
+      // addDisease(
+      //   disease,
+      // );
+      // To close the bottom sheet after we pass input
+      Navigator.of(context).pop();
+    } catch (e) {
+      print("error:" + e);
     }
     // Here add disease to firebase for this user
-    await FirebaseFirestore.instance
-        .collection("doctorDetails")
-        .doc(user.uid)
-        .update({
-      "diseases": FieldValue.arrayUnion([...diseases, enteredTitle])
-    });
-    addDisease(
-      _titleController.text,
-    );
-    // To close the bottom sheet after we pass input
-    Navigator.of(context).pop();
   }
 
   @override
   Widget build(BuildContext context) {
-    final doctor = Provider.of<Doctor>(context);
+    final diseases = Provider.of<Diseases>(context);
 
     return SingleChildScrollView(
       child: Card(
@@ -61,7 +71,7 @@ class _NewDiseaseState extends State<NewDisease> {
                   decoration: InputDecoration(labelText: 'Disease Name'),
                   // onChanged: (String value) => titleInput = value
                   controller: _titleController,
-                  onSubmitted: (_) => _submitData(doctor.addDisease),
+                  onSubmitted: (_) => _submitData(diseases.addDisease),
                 ),
                 Padding(
                     padding: const EdgeInsets.only(top: 10),
@@ -72,7 +82,7 @@ class _NewDiseaseState extends State<NewDisease> {
                           primary: Colors.white,
                           backgroundColor: Theme.of(context).primaryColor),
                       child: const Text("Add Disease"),
-                      onPressed: () => _submitData(doctor.addDisease),
+                      onPressed: () => _submitData(diseases.addDisease),
                     )),
                 SizedBox(height: 100),
               ]),

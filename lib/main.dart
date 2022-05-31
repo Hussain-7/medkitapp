@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:medkitapp/firebase_options.dart';
+import 'package:medkitapp/state/Diseases.dart';
 import 'package:medkitapp/state/Doctor.dart';
 import 'package:medkitapp/state/google_sign_in.dart';
 import 'package:medkitapp/view/animations/fadeAnimation.dart';
@@ -30,6 +31,9 @@ class MedKitApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(
           create: (_) => Doctor(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => Diseases(),
         ),
         ChangeNotifierProvider(
           create: (_) => GoogleSignInProvider(),

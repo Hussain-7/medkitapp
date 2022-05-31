@@ -1,9 +1,16 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:medkitapp/state/Doctor.dart';
+import 'package:medkitapp/state/google_sign_in.dart';
+import 'package:medkitapp/model/user.dart';
 import 'package:medkitapp/view/animations/bottomAnimation.dart';
 import 'package:medkitapp/view/doctor/doctorLogin.dart';
 import 'package:medkitapp/view/otherWidgetsAndScreen/backBtnAndImage.dart';
+import 'package:medkitapp/view/patient/patientPanel.dart';
+import 'package:provider/provider.dart';
 
 // import 'package:medkit/patient/patientPanel.dart';
 
@@ -12,6 +19,49 @@ class PatientLogin extends StatelessWidget {
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
+
+    void createUserInFirestore() async {
+      FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
+      User user = FirebaseAuth.instance.currentUser;
+
+      UserModel userModel = UserModel();
+
+      // writing all the values
+      userModel.email = user.email;
+      userModel.uid = user.uid;
+      userModel.name = user.displayName;
+      userModel.cnic = '';
+      userModel.type = "patient";
+
+      // get user by email
+      DocumentSnapshot userSnapshot =
+          await firebaseFirestore.collection("users").doc(user.uid).get();
+      print("querying user");
+      print(userSnapshot.exists);
+      if (!userSnapshot.exists) {
+        print("user does not exist");
+        await firebaseFirestore
+            .collection("users")
+            .doc(user.uid)
+            .set(userModel.toMap());
+
+        await firebaseFirestore
+            .collection("patientDetails")
+            .doc(user.uid)
+            .set(new Doctor(uid: user.uid).toMap());
+        Fluttertoast.showToast(msg: "Account created successfully :) ");
+      }
+      Fluttertoast.showToast(msg: "Logged in successfully :) ");
+    }
+
+    void LoginPatient() async {
+      final provider =
+          Provider.of<GoogleSignInProvider>(context, listen: false);
+      await provider.googleLogin();
+      await createUserInFirestore();
+      Navigator.push(
+          context, new MaterialPageRoute(builder: (context) => PatientPanel()));
+    }
 
     return Scaffold(
       body: SafeArea(
@@ -65,6 +115,7 @@ class PatientLogin extends StatelessWidget {
                     onPressed: () {
                       // _signIn(context);
                       print("Login");
+                      LoginPatient();
                     },
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,

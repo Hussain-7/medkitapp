@@ -8,7 +8,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:medkitapp/state/Doctor.dart';
 import 'package:medkitapp/state/google_sign_in.dart';
-import 'package:medkitapp/state/user.dart';
+import 'package:medkitapp/model/user.dart';
 import 'package:medkitapp/view/animations/bottomAnimation.dart';
 import 'package:medkitapp/view/doctor/doctorPanel.dart';
 import 'package:medkitapp/view/otherWidgetsAndScreen/backBtnAndImage.dart';
@@ -235,29 +235,29 @@ class _DoctorLoginState extends State<DoctorLogin> {
                             ),
                           ),
                         ),
-                        Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: <Widget>[
-                              Text("Already have an account? "),
-                              GestureDetector(
-                                onTap: () {
-                                  // Navigator.push(
-                                  //     context,
-                                  //     MaterialPageRoute(
-                                  //         builder: (context) =>
-                                  //             RegistrationScreen()
-                                  //             )
-                                  // );
-                                },
-                                child: Text(
-                                  "Login",
-                                  style: TextStyle(
-                                      color: Colors.redAccent,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 15),
-                                ),
-                              )
-                            ]),
+                        // Row(
+                        //     mainAxisAlignment: MainAxisAlignment.center,
+                        //     children: <Widget>[
+                        //       Text("Already have an account? "),
+                        //       GestureDetector(
+                        //         onTap: () {
+                        //           // Navigator.push(
+                        //           //     context,
+                        //           //     MaterialPageRoute(
+                        //           //         builder: (context) =>
+                        //           //             RegistrationScreen()
+                        //           //             )
+                        //           // );
+                        //         },
+                        //         child: Text(
+                        //           "Login",
+                        //           style: TextStyle(
+                        //               color: Colors.redAccent,
+                        //               fontWeight: FontWeight.bold,
+                        //               fontSize: 15),
+                        //         ),
+                        //       )
+                        //     ]),
                         SizedBox(
                           height: height * 0.02,
                         ),

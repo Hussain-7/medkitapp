@@ -4,11 +4,14 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:medkitapp/model/disease.dart';
 import 'package:medkitapp/state/Doctor.dart';
+import 'package:medkitapp/state/diseases.dart';
 import 'package:medkitapp/view/doctor/NewDisease.dart';
 import 'package:medkitapp/view/doctor/doctorProfile.dart';
 import 'package:medkitapp/view/otherWidgetsAndScreen/customListTiles.dart';
 import 'package:provider/provider.dart';
+import 'package:uuid/uuid.dart';
 // import 'package:medkit/doctor/addDisease.dart';
 // import 'package:medkit/doctor/doctorProfile.dart';
 import '../animations/bottomAnimation.dart';
@@ -20,23 +23,10 @@ class DoctorPanel extends StatefulWidget {
 }
 
 class _DoctorPanelState extends State<DoctorPanel> {
-  Future getDiseaseInfo(Doctor doctor, User user) async {
-    var data = await FirebaseFirestore.instance
-        .collection('doctorDetails')
-        .doc(user.uid)
-        .get();
-    print(data.get('diseases').length == 0);
-    // if (data.get('diseases').length != 0) {
-    //   var diseases = data.get('diseases');
-    //   print(diseases);
-    //   doctor.diseases = diseases;
-    //   return diseases;
-    // } else {
-    //   doctor.diseases = [];
-    //   return data.get('diseases');
-    // }
-    // doctor.diseases = data.get('diseases') as List<String>;
-    return data.get('diseases');
+  Future getDiseaseInfo(Diseases diseases) async {
+    var data = await FirebaseFirestore.instance.collection('diseases').get();
+    print("data here");
+    return data.docs;
   }
 
   final GoogleSignIn _gSignIn = GoogleSignIn();
@@ -95,21 +85,25 @@ class _DoctorPanelState extends State<DoctorPanel> {
         });
   }
 
-  void RemoveDisease(User user, String diseaseName) async {
-    Doctor doctor = Provider.of<Doctor>(context, listen: false);
-    doctor.removeDisease(diseaseName);
+  void RemoveDisease(User user, dynamic data) async {
+    // doctor.removeDisease(diseaseName);
+    // await FirebaseFirestore.instance
+    //     .collection("doctorDetails")
+    //     .doc(user.uid)
+    //     .update({
+    //   "diseases": FieldValue.arrayRemove([diseaseName])
+    // });
+
     await FirebaseFirestore.instance
-        .collection("doctorDetails")
-        .doc(user.uid)
-        .update({
-      "diseases": FieldValue.arrayRemove([diseaseName])
+        .runTransaction((Transaction myTransaction) async {
+      await myTransaction.delete(data.reference);
     });
   }
 
   @override
   Widget build(BuildContext context) {
     final user = FirebaseAuth.instance.currentUser;
-    final doctor = Provider.of<Doctor>(context);
+    final diseases = Provider.of<Diseases>(context);
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
     return WillPopScope(
@@ -232,7 +226,7 @@ class _DoctorPanelState extends State<DoctorPanel> {
               ),
             ),
             FutureBuilder(
-              future: getDiseaseInfo(doctor, user),
+              future: getDiseaseInfo(diseases),
               builder: (context, snapshot) {
                 print(snapshot);
                 if (snapshot.connectionState == ConnectionState.waiting) {
@@ -256,7 +250,7 @@ class _DoctorPanelState extends State<DoctorPanel> {
                         print(index);
                         return WidgetAnimator(CustomTile(
                           delBtn: editPanel,
-                          disease: snapshot.data[index],
+                          disease: snapshot.data[index].get('name'),
                           removeDisease: () =>
                               RemoveDisease(user, snapshot.data[index]),
                         ));

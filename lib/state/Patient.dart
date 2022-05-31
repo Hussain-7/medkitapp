@@ -1,4 +1,4 @@
-import 'package:medkitappD/state/Doctor.dart';
+import 'package:medkitapp/state/Doctor.dart';
 
 class PatientDetails {
   final String providerDetails;
@@ -15,5 +15,3 @@ class ProviderPatientDetails {
   ProviderPatientDetails(this.providerDetails);
   final String providerDetails;
 }
-
-
