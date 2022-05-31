@@ -17,9 +17,9 @@ class PatientPanel extends StatefulWidget {
 
 class _PatientPanelState extends State<PatientPanel> {
   Future getDiseaseInfo() async {
-    // var firestore = Firestore.instance;
-    // QuerySnapshot qn = await firestore.collection("Diseases").getDocuments();
-    // return qn.documents;
+    print('this called');
+    var data = await FirebaseFirestore.instance.collection('diseases').get();
+    return data.docs;
   }
 
   final GoogleSignIn _gSignIn = GoogleSignIn();
@@ -103,6 +103,9 @@ class _PatientPanelState extends State<PatientPanel> {
                       height: height * 0.052,
                       child: WidgetAnimator(
                         TextFormField(
+                          onTap: () {
+                            print('calling');
+                          },
                           keyboardType: TextInputType.text,
                           autofocus: false,
                           textInputAction: TextInputAction.search,
@@ -187,7 +190,7 @@ class _PatientPanelState extends State<PatientPanel> {
                           return WidgetAnimator(
                             CustomTile(
                               delBtn: false,
-                              disease: snapshot.data[index],
+                              disease: snapshot.data[index].get('name'),
                             ),
                           );
                         },

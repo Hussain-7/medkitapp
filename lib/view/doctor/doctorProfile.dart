@@ -518,8 +518,8 @@ class _DoctorProfileState extends State<DoctorProfile> {
                   final provider =
                       Provider.of<GoogleSignInProvider>(context, listen: false);
                   await provider.logout();
-                  // int count = 0;
-                  // Navigator.of(context).popUntil((_) => count++ >= 3);
+                  int count = 0;
+                  Navigator.of(context).popUntil((_) => count++ >= 2);
                   Navigator.pushNamed(context, '/DoctorLogin');
                 } catch (e) {
                   print("error logging out:" + e);
