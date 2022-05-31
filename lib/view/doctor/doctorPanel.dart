@@ -23,9 +23,8 @@ class DoctorPanel extends StatefulWidget {
 }
 
 class _DoctorPanelState extends State<DoctorPanel> {
-  Future getDiseaseInfo(Diseases diseases) async {
+  Future getDiseaseInfo(dynamic diseases) async {
     var data = await FirebaseFirestore.instance.collection('diseases').get();
-    print("data here");
     return data.docs;
   }
 
@@ -85,25 +84,20 @@ class _DoctorPanelState extends State<DoctorPanel> {
         });
   }
 
-  void RemoveDisease(User user, dynamic data) async {
-    // doctor.removeDisease(diseaseName);
-    // await FirebaseFirestore.instance
-    //     .collection("doctorDetails")
-    //     .doc(user.uid)
-    //     .update({
-    //   "diseases": FieldValue.arrayRemove([diseaseName])
-    // });
-
+  void RemoveDisease(User user, dynamic data, dynamic diseases) async {
     await FirebaseFirestore.instance
         .runTransaction((Transaction myTransaction) async {
       await myTransaction.delete(data.reference);
     });
+    diseases.removeDisease(data.data());
   }
 
   @override
   Widget build(BuildContext context) {
     final user = FirebaseAuth.instance.currentUser;
-    final diseases = Provider.of<Diseases>(context);
+    var diseases = Provider.of<Diseases>(context);
+    print("here");
+    print(diseases);
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
     return WillPopScope(
@@ -251,8 +245,8 @@ class _DoctorPanelState extends State<DoctorPanel> {
                         return WidgetAnimator(CustomTile(
                           delBtn: editPanel,
                           disease: snapshot.data[index].get('name'),
-                          removeDisease: () =>
-                              RemoveDisease(user, snapshot.data[index]),
+                          removeDisease: () => RemoveDisease(
+                              user, snapshot.data[index], diseases),
                         ));
                       },
                     ),

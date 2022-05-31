@@ -3,8 +3,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:medkitapp/model/disease.dart';
-import 'package:medkitapp/state/Diseases.dart';
 import 'package:medkitapp/state/Doctor.dart';
+import 'package:medkitapp/state/diseases.dart';
 import 'package:provider/provider.dart';
 import 'package:uuid/uuid.dart';
 
@@ -23,7 +23,7 @@ class _NewDiseaseState extends State<NewDisease> {
     super.initState();
   }
 
-  void _submitData(Function addDisease) async {
+  void _submitData(dynamic diseases) async {
     try {
       final enteredTitle = _titleController.text;
       final user = FirebaseAuth.instance.currentUser;
@@ -40,9 +40,9 @@ class _NewDiseaseState extends State<NewDisease> {
           .doc(uuid.toString())
           .set(disease.toMap());
 
-      // addDisease(
-      //   disease,
-      // );
+      diseases.addDisease(
+        disease,
+      );
       // To close the bottom sheet after we pass input
       Navigator.of(context).pop();
     } catch (e) {
@@ -53,7 +53,7 @@ class _NewDiseaseState extends State<NewDisease> {
 
   @override
   Widget build(BuildContext context) {
-    final diseases = Provider.of<Diseases>(context);
+    var diseases = Provider.of<Diseases>(context);
 
     return SingleChildScrollView(
       child: Card(
@@ -71,7 +71,7 @@ class _NewDiseaseState extends State<NewDisease> {
                   decoration: InputDecoration(labelText: 'Disease Name'),
                   // onChanged: (String value) => titleInput = value
                   controller: _titleController,
-                  onSubmitted: (_) => _submitData(diseases.addDisease),
+                  onSubmitted: (_) => _submitData(diseases),
                 ),
                 Padding(
                     padding: const EdgeInsets.only(top: 10),
@@ -82,7 +82,7 @@ class _NewDiseaseState extends State<NewDisease> {
                           primary: Colors.white,
                           backgroundColor: Theme.of(context).primaryColor),
                       child: const Text("Add Disease"),
-                      onPressed: () => _submitData(diseases.addDisease),
+                      onPressed: () => _submitData(diseases),
                     )),
                 SizedBox(height: 100),
               ]),

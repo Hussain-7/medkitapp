@@ -2,7 +2,7 @@ import 'package:medkitapp/model/prescription.dart';
 import 'package:medkitapp/state/Doctor.dart';
 import 'package:flutter/foundation.dart';
 
-class Disease with ChangeNotifier {
+class Disease {
   String uid;
   List<Perscription> perscriptions;
   String name;

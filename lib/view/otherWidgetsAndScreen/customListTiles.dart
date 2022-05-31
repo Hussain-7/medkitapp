@@ -61,13 +61,14 @@ class _CustomTileState extends State<CustomTile> {
             ),
             FlatButton(
               onPressed: () {
-                widget.delBtn
-                    ? _deleteDisease(context)
-                    : new MaterialPageRoute(
-                        builder: (context) => MedDetails(
-                              doctorName: 'Hussain',
-                            ));
-                ;
+                if (widget.delBtn) {
+                  _deleteDisease(context);
+                } else {
+                  Navigator.push(
+                      context,
+                      new MaterialPageRoute(
+                          builder: (context) => MedDetails()));
+                }
               },
               shape: CircleBorder(),
               child: widget.delBtn

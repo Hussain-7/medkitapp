@@ -3,10 +3,16 @@ class Perscription {
   String medicine;
   String dose;
   String description;
+  String diseaseId;
   String doctorId;
 
   Perscription(
-      {this.uid, this.medicine, this.dose, this.description, this.doctorId});
+      {this.uid,
+      this.medicine,
+      this.dose,
+      this.description,
+      this.diseaseId,
+      this.doctorId});
 
   // receiving data from server
   factory Perscription.fromMap(map) {
@@ -15,6 +21,7 @@ class Perscription {
       medicine: map['medicine'],
       dose: map['dose'],
       description: map['description'],
+      diseaseId: map['diseaseId'],
       doctorId: map['doctorId'],
     );
   }
@@ -23,11 +30,11 @@ class Perscription {
   Map<String, dynamic> toMap() {
     return {
       'uid': uid,
-      'email': medicine,
-      'name': dose,
-      'cnic': description,
-      'type': doctorId,
+      'medicine': medicine,
+      'dose': dose,
+      'description': description,
+      'diseaseId': diseaseId,
+      'doctorId': doctorId,
     };
   }
-  
 }

@@ -24,8 +24,12 @@ class Diseases with ChangeNotifier {
     notifyListeners();
   }
 
-  void removeDisease(String disease) {
-    _diseases.remove(disease);
+  void removeDisease(dynamic disease) {
+    // _diseases = _diseases.firstWhere((element) => element.uid == disease.uid);
+    print(disease['uid']);
+    _diseases = _diseases.where((item) => item.uid != disease['uid']).toList();
+    print(_diseases);
+    // _diseases.remove(disease);
     notifyListeners();
   }
 
