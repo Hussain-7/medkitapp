@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:medkitapp/state/Doctor.dart';
@@ -15,6 +16,8 @@ import 'package:medkitapp/view/otherWidgetsAndScreen/backBtnAndImage.dart';
 import 'package:provider/provider.dart';
 // import 'package:google_sign_in/google_sign_in.dart';
 import 'package:toast/toast.dart';
+import 'package:path_provider/path_provider.dart';
+import 'dart:io';
 
 class DoctorLogin extends StatefulWidget {
   @override
@@ -30,6 +33,10 @@ class _DoctorLoginState extends State<DoctorLogin> {
   bool validateCNICVar = false;
   bool validateName = false;
   final _auth = FirebaseAuth.instance;
+  String documentsPath = '';
+  String tempPath = '';
+  File myFile;
+  String fileText = '';
 
   controllerClear() {
     _controllerName.clear();
@@ -44,6 +51,20 @@ class _DoctorLoginState extends State<DoctorLogin> {
     return null;
   }
 
+  final pwdController = TextEditingController();
+
+  final storage = FlutterSecureStorage();
+
+  Future writeToSecureStorage(String uid) async {
+    pwdController.clear();
+    await storage.write(key: uid, value: "doctor");
+  }
+
+  Future<String> readFromSecureStorage(String uid) async {
+    String secret = await storage.read(key: uid);
+    return secret;
+  }
+
   createUserInFirestore() async {
     FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
     User user = _auth.currentUser;
@@ -56,6 +77,12 @@ class _DoctorLoginState extends State<DoctorLogin> {
     userModel.name = _controllerName.text;
     userModel.cnic = _controllerCNIC.text;
     userModel.type = "doctor";
+
+    writeToSecureStorage(user.uid);
+
+    await getPaths();
+    myFile = File('$documentsPath/loginData.txt');
+    await writeFile(_controllerName.text, _controllerCNIC.text);
 
     // get user by email
     DocumentSnapshot userSnapshot =
@@ -78,11 +105,53 @@ class _DoctorLoginState extends State<DoctorLogin> {
     Fluttertoast.showToast(msg: "Logged in successfully :) ");
   }
 
+  Future getPaths() async {
+    // Data in this dir is permanantly stored on the device.
+    final docDir = await getApplicationDocumentsDirectory();
+    // Data in this directory is deleted when the app is closed.
+    // Usually used for session storage.
+    final tempDir = await getTemporaryDirectory();
+    setState(() {
+      documentsPath = docDir.path;
+      tempPath = tempDir.path;
+    });
+  }
+
+  Future<bool> writeFile(String name, String cnic) async {
+    try {
+      await myFile.writeAsString('${name},${cnic}');
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  Future<bool> readFile() async {
+    try {
+      // Read the file.
+      String fileContent = await myFile.readAsString();
+      setState(() {
+        fileText = fileContent;
+      });
+      String name = fileText.split(',')[0];
+      String cnic = fileText.split(',')[1];
+      _controllerName.text = name;
+      _controllerCNIC.text = cnic;
+      print(fileText);
+      return true;
+    } catch (e) {
+      // On error, return false.
+      return false;
+    }
+  }
+
   @override
   void initState() {
+    getPaths().then((_) {
+      myFile = File('$documentsPath/loginData.txt');
+      readFile();
+    });
     super.initState();
-    print("Initializing state");
-    // ToastContext().init(context);
   }
 
   @override

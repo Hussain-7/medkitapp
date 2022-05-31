@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:medkitapp/model/disease.dart';
+import 'package:medkitapp/model/prescription.dart';
 import 'package:medkitapp/state/Doctor.dart';
 import 'package:medkitapp/state/diseases.dart';
 import 'package:provider/provider.dart';
@@ -31,8 +32,20 @@ class _NewDiseaseState extends State<NewDisease> {
       if (enteredTitle.isEmpty) {
         return;
       }
+      var uuid2 = Uuid().v4();
       var uuid = Uuid().v4();
-      Disease disease = Disease(uid: uuid.toString(), name: enteredTitle);
+      // var perscription = Perscription(
+      //     uid: uuid2,
+      //     medicine: "mediBevacizumab cine",
+      //     dose: "2 times a day",
+      //     description: "Take it as prescribed",
+      //     diseaseId: uuid,
+      //     doctorId: user.uid);
+      Disease disease = Disease(
+        uid: uuid.toString(),
+        name: enteredTitle,
+        // perscriptions: [perscription]
+      );
       print(disease);
 
       await FirebaseFirestore.instance

@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:medkitapp/state/Doctor.dart';
@@ -20,6 +21,17 @@ class PatientLogin extends StatelessWidget {
     final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
 
+    final storage = FlutterSecureStorage();
+
+    Future writeToSecureStorage(String uid) async {
+      await storage.write(key: uid, value: "patient");
+    }
+
+    Future<String> readFromSecureStorage(String uid) async {
+      String secret = await storage.read(key: uid);
+      return secret;
+    }
+
     void createUserInFirestore() async {
       FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
       User user = FirebaseAuth.instance.currentUser;
@@ -32,7 +44,7 @@ class PatientLogin extends StatelessWidget {
       userModel.name = user.displayName;
       userModel.cnic = '';
       userModel.type = "patient";
-
+      writeToSecureStorage(user.uid);
       // get user by email
       DocumentSnapshot userSnapshot =
           await firebaseFirestore.collection("users").doc(user.uid).get();

@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:medkitapp/firebase_options.dart';
 import 'package:medkitapp/state/Doctor.dart';
@@ -13,6 +14,7 @@ import 'package:medkitapp/view/otherWidgetsAndScreen/aboutUs.dart';
 import 'package:medkitapp/view/otherWidgetsAndScreen/category.dart';
 import 'package:medkitapp/view/patient/patientLogin.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -75,10 +77,12 @@ class _WelcomeScreenState extends State<WelcomeScreen>
   Animation<double> _positionAnimation;
 
   bool hideIcon = false;
+  int appCounter;
 
   @override
   void initState() {
     super.initState();
+    readAndWritePreference();
     _scaleController =
         AnimationController(vsync: this, duration: Duration(milliseconds: 300));
 
@@ -130,6 +134,32 @@ class _WelcomeScreenState extends State<WelcomeScreen>
           });
   }
 
+  Future readAndWritePreference() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    appCounter = prefs.getInt('appCounter');
+    if (appCounter == null) {
+      appCounter = 1;
+    } else {
+      appCounter++;
+    }
+    await prefs.setInt('appCounter', appCounter);
+    setState(() {
+      appCounter = appCounter;
+    });
+    Fluttertoast.showToast(
+      msg: "Opened app ${appCounter} times",
+      gravity: ToastGravity.TOP,
+    );
+  }
+
+  Future deletePreference() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.clear();
+    setState(() {
+      appCounter = 0;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
@@ -137,7 +167,6 @@ class _WelcomeScreenState extends State<WelcomeScreen>
         statusBarColor: Colors.black.withOpacity(0.1)));
     final double width = MediaQuery.of(context).size.width;
     final double height = MediaQuery.of(context).size.height;
-
     return Scaffold(
       backgroundColor: Colors.white,
       body: Container(
